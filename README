@@ -1,0 +1,61 @@
+AAFC Nano Lab Technical Interview
+Author: Cole Haraga
+Github: haragaCole
+March 23, 2022
+
+Abstract:
+This program finds the extraneous values, or values that exceed a defined threshold and flag them. Then the final standard out .csv
+file for each experiment1 and experiment2 that will be a vertical list of comma separated data points with their coordinate from the
+excel file in form A12, x where x is the value that exceeds the threshold upper or lower limit.
+
+Description and Design:
+It was a tricky solution to what normalizing data with no labels or headers. Therefore must consider that all the data belongs to one matrix. Considering the given link from the initial interview check, this could all belong to one pipette trial with different samples in the wells of Nano bots adhering to different enzymes or cell structures of specific plants. Meaning that it must be all treated as one data set. 
+Considering it as a matrix allows to normalize by taking the mean of all the data points in the control matrix and divide the each cell of experiment data with its mean of the corresponding control data. Another method could be a min/max normalization but this will make it harder to define a threshold value because of the compressed scale it defines. Decimal scaling would mean nothing here because we are comparing it to the control data. Since none of the experimental data is negative, this allows for the dividing by control mean method explained before. This is because it allows all the data to deviate around a value of positive one and never negative one.
+Defining a threshold for this normalized data shows two apparent ways. The first being that of standard deviation; this will show what values are very large outliers but will not give much control for what the cut off will be for threshold. A common way that box plots use is finding the IQR (interquartile range) is normally for finding the upper and lower quarter values for what is outside, giving a bell curve and its extraneous outliers. But we can modify it for any any percentage of lower and upper values based on the normalized data.
+As  previously stated the data should deviate around a value of 1, because we are looking for a training set for a AI it makes sense to limit the outliers or True Negative values to be from the upper 50% and higher and the lower 30% and lower (seen in the code) from the average normalize data value, leaving a 20% error allows for all the values to be within .5 of 1, because 1 should be the theoretical average of the normalized data. Leaving a reasonable range in the medium values of the normalized data. These percentages can be altered so that the researcher may find which values they are looking for and which based on context should be extraneous outliers. 
+I can compare the normalized data and spreadsheet with None sheet corresponding, to see if the cells considered exceeding the threshold make sense. The values effectively make sense based on observation because they are most commonly changed between the two, meaning they could be wells in the pipette machine looking to be changed by the researcher or what is being changed on purpose for the objective of that specific experiment. For the .csv file to have the coordinates shared by the excel sheet, must define headers and row indices.
+To obtain more accurate data I would then delete the outliers instead of flag them and run the program again on the file that has deleted the outliers and find new outliers to see if these outliers are far off from the mean and if they were they may also be defined outliers.
+
+Two versions of the final answer were created based on what the researcher or data scientist is looking to build the AI training sets upon. One has the tuple version of the outliers. This will give keys for the column, row and value all comma separated tupled for each point of data. The second and favourable method for representing the data is having the .csv with the location key then the value of the outlier which works well for the time complexity of the AI data set and being able to classify True Positive and True Negative values for if they are values the researcher is looking for expected change in that specific coordinate for that well in the pipette machine.
+
+It is possible in the future to make a Makefile in order to stream line the program so that it's possible to run for each file individually but the Makefile will call whatever file you use for the argument in the terminal.
+
+Notes for data collection:
+1) If the excel sheets given weren't space separated but underscore separated allows for the .py program to call to it through basic directory bashing, this would only make things more efficient because then the name wouldn't have to be changed later.
+2) Defining headers and row names for a matrix style as what was given would make the time complexity and files created in the program more streamlined because there wouldn't be a need to standard out a .csv file of the cells filled with NoneType in order to create the headers and row indices.
+
+Running Instructions:
+The python libraries needed are NumPy and Pandas, an Excel program will also need to be installed on the user system.
+Inside terminal change directory to that of the AAFC-interview folder and within terminal type "python3 interview.py" to run the file. Or using personal IDE can use the "run" button and for final answers and files look back to the AAFC-interview folder to see .csv files.
+Please ensure that the folder downloaded is its own native directory. Meaning that it is not within another file and is its own directory.On your folder from which the .py file is running or before running make sure to be in that directory that holds the given .xlsx files. Then simply run the program through your IDE and it should pull the files correctly and automatically update the files already included that hold data within them. 
+
+Files included:
+Note: if says TEST, it is not required to complete program can can delete that method from the code.
+Note: files could easily be written to a sperate folder or directory if wanted but will overall affect the run time.
+interview.py: The executable python3 file that reads, manipulates the data from and standard out the data files below.
+
+Exam_control_measurements1.xlsx: given file of control measurements for experiment 1
+Exam_control_measurements2.xlsx: given file of control measurements for experiment 2
+Exam_experimental_measurements1.xlsx: given file of experiment measurements for experiment 1
+Exam_experimental_measurements2.xlsx: given file of experiment measurements for experiment 2
+
+TEST_normalized_data1.xlsx: is all the normalized data of experiment 1 based on the mean of control data 1. Is for checking for 
+proper normalization and visually being able to spot where a cut off for threshold should be for this experiment.
+TEST_normalized_data2.xlsx: is all the normalized data of experiment 2 based on the mean of control data 2. Is for checking for 
+proper normalization and visually being able to spot where a cut off for threshold should be for this experiment.
+
+Experiment1_spreadsheet_with_NoneType.csv: holds the normalized experiment data but only shows the values that exceed the
+threshold point and the rest of the cells are empty with NoneType for experiment 1, this is needed to give the data headers.
+Experiment2_spreadsheet_with_NoneType.csv: holds the normalized experiment data but only shows the values that exceed the
+threshold point and the rest of the cells are empty with NoneType for experiment 2 this is needed to give the data headers.
+
+Experiment1_tuple.csv: Holds the final comma separated values that exceed the threshold defined along with their column letter and row number for experiment 1 in form of (A, 12, x) where x is the value that exceeded the threshold.
+Experiment2_tuple.csv: Holds the final comma separated values that exceed the threshold defined along with their column letter and row number for experiment 2 in form of (A, 12, x) where x is the value that exceeded the threshold.
+
+FINAL_Experiment1.csv: The final standard out file that has no none type value and represents the data as per what is requested from the interview question for experiment 1.
+FINAL_Experiment2.csv: The final standard out file that has no none type value and represents the data as per what is requested from the interview question for experiment 1.
+
+Final Notes:
+Thanks for the opportunity to apply for this job. Feel free to email me if you have any questions.
+
+
